@@ -3,6 +3,10 @@
 
 This project is a visualizer for the N-Queens problem, demonstrating the process of solving the problem using backtracking. It allows users to select the size of the chessboard and visualizes the placement and removal of queens step-by-step.
 
+## Project Live Link
+[Live Demo](https://tusharbhardwa.github.io/N-Queen_Visualizer/)
+
+
 ## Table of Contents
 
 - [Introduction](#introduction)
