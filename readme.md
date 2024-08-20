@@ -50,7 +50,7 @@ To run this project locally, you need a web browser that supports HTML5, CSS3, a
 2. Navigate to the project directory:
    ```sh
    cd n-queens-visualizer
-3. Open the 'index.html' file in your preferred web browser.
+3. Open the 'index.html' file in your preferred web browser.  
 
 ## Usage
 1. Open the index.html file in a web browser.
