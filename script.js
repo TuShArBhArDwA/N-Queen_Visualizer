@@ -48,4 +48,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function sleep(ms
+    function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            async function solveNQueens(board, row) {
+                if (row === boardSize) {
+                    return true;
+                }
+
+                for (let col = 0; col < boardSize; col++) {
+                    if (isValid(board, row, col)) {
+                        board[row] = col;
+                        visualizePlacement(row, col, true);
+                        await sleep(500);
+
+                        if (await solveNQueens(board, row + 1)) {
+                            return true;
+                        }
+
+                        board[row] = -1;
+                        visualizePlacement(row, col, false);
+                        await sleep(500);
+                    }
+                }
+                return false;
+            }
+
+            function isValid(board, row, col) {
+                for (let i = 0; i < row; i++) {
+                    if (board[i] === col || 
+                        board[i] - i === col - row || 
+                        board[i] + i === col + row) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            async function startVisualization() {
+                clearBoard();
+                const board = Array(boardSize).fill(-1);
+                const hasSolution = await solveNQueens(board, 0);
+
+                if (hasSolution) {
+                    alert(`Successfully placed ${boardSize} queens on the board!`);
+                } else {
+                    alert(`No solution found for the ${boardSize} board size.`);
+                }
+            }
+
+
