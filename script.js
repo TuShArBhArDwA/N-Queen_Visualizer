@@ -97,5 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(`No solution found for the ${boardSize} board size.`);
                 }
             }
+createBoard(boardSize);
 
 
