@@ -4,9 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const boardSizeInput = document.getElementById('boardSize');
     const startButton = document.getElementById('startButton');
 
-    boardSizeInput.addEventListener('change', (event) => {
-        boardSize = parseInt(event.target.value);
-        createBoard(boardSize);
+    boardSizeInput.addEventListener('input', (event) => { // Changed from 'change' to 'input'
+        const newSize = parseInt(event.target.value);
+        if (newSize >= 4 && newSize <= 20) {
+            boardSize = newSize;
+            createBoard(boardSize);
+        }
     });
 
     startButton.addEventListener('click', startVisualization);
@@ -35,9 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function visualizePlacement(row, col, isPlacing) {
         const cells = document.querySelectorAll('.cell');
-        const cell = cells[row * boardSize + col];
-        cell.textContent = isPlacing ? '♛' : '';
-        cell.classList.toggle('queen', isPlacing);
+        const cellIndex = row * boardSize + col;
+        const cell = cells[cellIndex];
+        if (cell) {
+            cell.textContent = isPlacing ? 'Q' : '';   // Changed from '♛' to 'Q'
+            cell.classList.toggle('queen', isPlacing);
+        } else {
+            console.error(`Cell at row ${row}, col ${col} does not exist.`);
+        }
     }
 
     function clearBoard() {
@@ -49,54 +57,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
-            async function solveNQueens(board, row) {
-                if (row === boardSize) {
+    async function solveNQueens(board, row) {
+        if (row === boardSize) {
+            return true;
+        }
+
+        for (let col = 0; col < boardSize; col++) {
+            if (isValid(board, row, col)) {
+                board[row] = col;
+                visualizePlacement(row, col, true);
+                await sleep(300); // Reduced sleep time for faster visualization
+
+                if (await solveNQueens(board, row + 1)) {
                     return true;
                 }
 
-                for (let col = 0; col < boardSize; col++) {
-                    if (isValid(board, row, col)) {
-                        board[row] = col;
-                        visualizePlacement(row, col, true);
-                        await sleep(500);
+                board[row] = -1;
+                visualizePlacement(row, col, false);
+                await sleep(300);
+            }
+        }
+        return false;
+    }
 
-                        if (await solveNQueens(board, row + 1)) {
-                            return true;
-                        }
-
-                        board[row] = -1;
-                        visualizePlacement(row, col, false);
-                        await sleep(500);
-                    }
-                }
+    function isValid(board, row, col) {
+        for (let i = 0; i < row; i++) {
+            if (board[i] === col || 
+                board[i] - i === col - row || 
+                board[i] + i === col + row) {
                 return false;
             }
+        }
+        return true;
+    }
 
-            function isValid(board, row, col) {
-                for (let i = 0; i < row; i++) {
-                    if (board[i] === col || 
-                        board[i] - i === col - row || 
-                        board[i] + i === col + row) {
-                        return false;
-                    }
-                }
-                return true;
-            }
+    async function startVisualization() {
+        clearBoard();
+        startButton.disabled = true; // Disable button during visualization
+        const board = Array(boardSize).fill(-1);
+        const hasSolution = await solveNQueens(board, 0);
 
-            async function startVisualization() {
-                clearBoard();
-                const board = Array(boardSize).fill(-1);
-                const hasSolution = await solveNQueens(board, 0);
+        if (hasSolution) {
+            alert(`Successfully placed ${boardSize} queens on the board!`);
+        } else {
+            alert(`No solution found for the ${boardSize} board size.`);
+        }
+        startButton.disabled = false; // Re-enable button after visualization
+    }
 
-                if (hasSolution) {
-                    alert(`Successfully placed ${boardSize} queens on the board!`);
-                } else {
-                    alert(`No solution found for the ${boardSize} board size.`);
-                }
-            }
-createBoard(boardSize);
-
-
+    createBoard(boardSize);
+});
