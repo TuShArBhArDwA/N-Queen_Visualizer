@@ -49,7 +49,7 @@
     }
     </style>
 </head>
-<body> <!-- Change body background color -->
+<body> 
     <div class="container">
         <h1>N-Queens Visualizer</h1>
         <label for="boardSize">Select Board Size: </label>
@@ -84,7 +84,6 @@
                     const row = Math.floor(i / size);
                     const col = i % size;
 
-                    // Alternate colors based on both row and column indices
                     if ((row + col) % 2 === 0) {
                         cell.classList.add('white');
                     } else {
